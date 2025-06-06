@@ -1,3 +1,5 @@
+# Wykorzystany przykład: https://github.com/xdevplatform/Twitter-API-v2-sample-code/blob/main/Recent-Search/recent_search.py
+
 import requests
 import json
 import os
@@ -22,19 +24,18 @@ query_params = {
     'tweet.fields': 'created_at,text,lang,author_id'
 }
 
-
+# Dodaje nagłówki autoryzacyjne (Bearer Token i User-Agent) do żądania HTTP
 def bearer_oauth(r):
     r.headers["Authorization"] = f"Bearer {BEARER_TOKEN}"
     r.headers["User-Agent"] = "x-sentiment-analysis"
     return r
 
-
+# Łączy się z endpointem API X i zwraca odpowiedź w formacie JSON
 def connect_to_endpoint(url, params):
     response = requests.get(url, auth=bearer_oauth, params=params)
     if response.status_code != 200:
         raise Exception(f"Błąd: {response.status_code} {response.text}")
     return response.json()
-
 
 def main():
     json_response = connect_to_endpoint(search_url, query_params)
@@ -46,7 +47,6 @@ def main():
         json.dump(json_response, f, ensure_ascii=False, indent=4)
 
     print(f"Dane zapisane do pliku: {filename}")
-
 
 if __name__ == "__main__":
     main()

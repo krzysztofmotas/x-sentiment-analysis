@@ -13,11 +13,14 @@ with open("tweets_cleaned.json", encoding="utf-8") as f:
 
 df["created_at"] = pd.to_datetime(df["created_at"])
 
+# Inicjalizacja analizatora sentymentu VADER
 sia = SentimentIntensityAnalyzer()
 
+# Oblicza ogólny wynik sentymentu dla podanego tekstu
 def get_vader_sentiment(text):
     return sia.polarity_scores(text)["compound"]
 
+# Klasyfikuje wynik sentymentu jako pozytywny, neutralny lub negatywny
 def classify_sentiment(score):
     if score >= 0.05:
         return "positive"
@@ -42,7 +45,7 @@ plt.show()
 
 # Wykres słupkowy – rozkład nastrojów
 plt.figure(figsize=(6, 4))
-sns.countplot(data=df, x="sentiment_label", palette="coolwarm")
+sns.countplot(data=df, x="sentiment_label", hue="sentiment_label", palette="coolwarm", legend=False)
 plt.title("Rozkład nastrojów w tweetach")
 plt.xlabel("Nastrój")
 plt.ylabel("Liczba tweetów")
@@ -57,16 +60,30 @@ plt.figure(figsize=(10, 5))
 plt.plot(df_sorted["created_at"], df_sorted["avg_sentiment"], marker="o")
 plt.title("Zmiana nastroju w czasie")
 plt.xlabel("Czas")
-plt.ylabel("Średni sentyment (rolling mean)")
+plt.ylabel("Średni sentyment")
 plt.xticks(rotation=45)
 plt.tight_layout()
 plt.show()
 
 # Heat mapa - średni sentyment vs. długość tweeta
 df["word_count"] = df["cleaned_text"].apply(lambda x: len(x.split()))
-df["length_bin"] = pd.cut(df["word_count"], bins=[0, 5, 10, 20, 40], labels=["0–5", "6–10", "11–20", "21–40"])
-pivot = df.pivot_table(index="length_bin", values="sentiment", aggfunc="mean")
 
-sns.heatmap(pivot, annot=True, cmap="YlGnBu", center=0)
-plt.title("Średni sentyment vs. długość tweeta")
+df["word_count_range"] = pd.cut(
+    df["word_count"],
+    bins=[0, 5, 10, 20, 40],
+    labels=["0–5 słów", "6–10 słów", "11–20 słów", "21–40 słów"]
+)
+
+avg_sentiment_by_length = df.pivot_table(
+    index="word_count_range",
+    values="sentiment",
+    aggfunc="mean",
+    observed=False
+)
+
+sns.heatmap(avg_sentiment_by_length, annot=True, cmap="YlGnBu", center=0)
+plt.title("Średni sentyment względem długości tweeta")
+plt.ylabel("Zakres liczby słów")
+plt.xlabel("Sentyment")
+plt.tight_layout()
 plt.show()
