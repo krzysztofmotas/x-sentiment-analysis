@@ -13,14 +13,14 @@ with open("tweets_cleaned.json", encoding="utf-8") as f:
 
 df["created_at"] = pd.to_datetime(df["created_at"])
 
-# Inicjalizacja analizatora sentymentu VADER
+# Inicjalizacja VADER
 sia = SentimentIntensityAnalyzer()
 
-# Oblicza ogólny wynik sentymentu dla podanego tekstu
+# Oblicza ogólny wynik nastroju dla podanego tekstu
 def get_vader_sentiment(text):
     return sia.polarity_scores(text)["compound"]
 
-# Klasyfikuje wynik sentymentu jako pozytywny, neutralny lub negatywny
+# Klasyfikuje wynik nastroju jako pozytywny, neutralny lub negatywny
 def classify_sentiment(score):
     if score >= 0.05:
         return "positive"
@@ -52,7 +52,7 @@ plt.ylabel("Liczba tweetów")
 plt.tight_layout()
 plt.show()
 
-# Wykres liniowy – sentyment w czasie
+# Wykres liniowy – nastrój w czasie
 df_sorted = df.sort_values("created_at")
 df_sorted["avg_sentiment"] = df_sorted["sentiment"].rolling(window=3, min_periods=1).mean()
 
@@ -60,12 +60,12 @@ plt.figure(figsize=(10, 5))
 plt.plot(df_sorted["created_at"], df_sorted["avg_sentiment"], marker="o")
 plt.title("Zmiana nastroju w czasie")
 plt.xlabel("Czas")
-plt.ylabel("Średni sentyment")
+plt.ylabel("Średni nastrój")
 plt.xticks(rotation=45)
 plt.tight_layout()
 plt.show()
 
-# Heat mapa - średni sentyment vs. długość tweeta
+# Heat mapa - średni nastrój vs. długość tweeta
 df["word_count"] = df["cleaned_text"].apply(lambda x: len(x.split()))
 
 df["word_count_range"] = pd.cut(
@@ -82,8 +82,8 @@ avg_sentiment_by_length = df.pivot_table(
 )
 
 sns.heatmap(avg_sentiment_by_length, annot=True, cmap="YlGnBu", center=0)
-plt.title("Średni sentyment względem długości tweeta")
+plt.title("Średni nastrój względem długości tweeta")
 plt.ylabel("Zakres liczby słów")
-plt.xlabel("Sentyment")
+plt.xlabel("Nastrój")
 plt.tight_layout()
 plt.show()

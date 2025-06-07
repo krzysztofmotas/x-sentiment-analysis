@@ -1,8 +1,8 @@
-# Analiza sentymentu postów dotyczących transferów Realu Madryt na platformie X (Twitter)
+# Analiza wydźwięku tweetów dotyczących transferów Realu Madryt na platformie X (Twitter)
 
 ## 1. Cel projektu
 
-Celem projektu było przeprowadzenie analizy sentymentu tweetów dotyczących klubu Real Madryt i jego aktywności transferowej. Projekt obejmował cały proces analityczny – od pozyskiwania danych z API platformy X, przez ich czyszczenie i analizę sentymentu z wykorzystaniem modelu VADER, aż po wizualizację wyników i interpretację nastrojów użytkowników.
+Celem projektu było przeprowadzenie analizy wydźwięku tweetów dotyczących klubu Real Madryt i jego aktywności transferowej. Projekt obejmował cały proces analityczny – od pozyskiwania danych z API platformy X, przez ich czyszczenie i analizę nastrojów z wykorzystaniem modelu VADER, aż po wizualizację wyników i interpretację nastrojów użytkowników.
 
 ## 2. Proces zbierania danych
 
@@ -33,9 +33,9 @@ Dane zostały przetworzone w skrypcie `clean_tweets.py`. Główne operacje:
 
 Oczyszczone teksty zapisano w kolumnie `cleaned_text`, a cały zbiór do pliku `tweets_cleaned.json`.
 
-## 4. Analiza sentymentu
+## 4. Analiza wydźwięku
 
-Analiza nastroju została przeprowadzona w `analyze_sentiment.py` przy użyciu modelu VADER. Dla każdego tweeta obliczono współczynnik `compound`, na podstawie którego przypisano klasę sentymentu:
+Analiza nastroju została przeprowadzona w `analyze_sentiment.py` przy użyciu modelu VADER. Dla każdego tweeta obliczono współczynnik `compound`, na podstawie którego przypisano klasę nastroju:
 
 * `positive`: compound ≥ 0.05
 * `negative`: compound ≤ -0.05
@@ -53,7 +53,7 @@ Wizualizacja najczęściej występujących słów po oczyszczeniu tweetów.
 
 ![Chmura słów](images/word_cloud.png)
 
-### Rozkład klas sentymentu (Wykres słupkowy)
+### Rozkład klas nastrojów (Wykres słupkowy)
 
 Pokazuje, jaka część tweetów miała charakter pozytywny, neutralny lub negatywny.
 
@@ -65,12 +65,12 @@ Pokazuje średni poziom nastroju w czasie, z uwzględnieniem okien czasowych.
 
 ![Wykres liniowy](images/plot2.png)
 
-### Sentyment a długość tweeta (Heatmapa)
+### Nastrój a długość tweeta (Heatmapa)
 
-Analizuje zależność między liczbą słów w tweecie a jego średnim sentymentem.
+Analizuje zależność między liczbą słów w tweecie a jego średnim nastrojem.
 
 ![Heatmapa](images/heatmap.png)
 
 ## 6. Wnioski
 
-Analiza wykazała przewagę pozytywnego sentymentu w tweetach dotyczących transferów Realu Madryt. Najczęściej pojawiały się nazwiska zawodników i słowa związane z transferami. Dłuższe tweety zwykle miały bardziej pozytywny charakter, co sugeruje, że użytkownicy dzielący się bardziej rozbudowanymi opiniami wyrażali większy entuzjazm.
+Analiza wykazała przewagę pozytywnego nastroju w tweetach dotyczących transferów Realu Madryt. Najczęściej pojawiały się nazwiska zawodników i słowa związane z transferami. Dłuższe tweety zwykle miały bardziej pozytywny charakter, co sugeruje, że użytkownicy dzielący się bardziej rozbudowanymi opiniami wyrażali większy entuzjazm.

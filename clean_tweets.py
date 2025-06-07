@@ -6,6 +6,8 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 import nltk
 
+stop_words = set(stopwords.words("english"))
+
 # Funkcja do wstępnego czyszczenia tekstu tweeta (małe litery, usunięcie URL-i i interpunkcji)
 def clean_tweet(text):
     text = text.lower()
@@ -29,7 +31,6 @@ tweets_list = raw["data"]
 df = pd.DataFrame(tweets_list)
 
 df["cleaned_text"] = df["text"].apply(clean_tweet)
-stop_words = set(stopwords.words("english"))
 df["cleaned_text"] = df["cleaned_text"].apply(remove_stopwords)
 
 df[["text", "cleaned_text", "created_at"]].to_json(
