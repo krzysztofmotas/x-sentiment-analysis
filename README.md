@@ -1,12 +1,12 @@
-# Analiza wydźwięku tweetów dotyczących transferów Realu Madryt na platformie X (Twitter)
+# Sentiment Analysis of Tweets about Real Madrid Transfers on X (Twitter)
 
-## 1. Cel projektu
+## 1. Project Goal
 
-Celem projektu było przeprowadzenie analizy wydźwięku tweetów dotyczących klubu Real Madryt i jego aktywności transferowej. Projekt obejmował cały proces analityczny – od pozyskiwania danych z API platformy X, przez ich czyszczenie i analizę nastrojów z wykorzystaniem modelu VADER, aż po wizualizację wyników i interpretację nastrojów użytkowników.
+The goal of the project was to conduct a sentiment analysis of tweets about Real Madrid football club and its transfer activity. The project covered the entire analytical process – from acquiring data from the X platform API, through data cleaning and sentiment analysis using the VADER model, to visualizing results and interpreting user sentiments.
 
-## 2. Proces zbierania danych
+## 2. Data Collection Process
 
-Dane zostały pobrane przy pomocy oficjalnego API v2 platformy X (`/search/recent`). W zapytaniu uwzględniono najczęstsze słowa kluczowe związane z transferami i Realem Madryt, ograniczając język do angielskiego i wykluczając retweety:
+The data was retrieved using the official X platform API v2 (`/search/recent`). The query included the most common keywords related to transfers and Real Madrid, limiting the language to English and excluding retweets:
 
 ```python
 query_params = {
@@ -21,56 +21,56 @@ query_params = {
 }
 ```
 
-Kod odpowiedzialny za pobieranie danych znajduje się w pliku `fetch_tweets.py`. Wyniki zapisano w pliku `tweets.json`.
+The code responsible for data retrieval is in the `fetch_tweets.py` file. The results were saved in the `tweets.json` file.
 
-## 3. Czyszczenie i przygotowanie danych
+## 3. Data Cleaning and Preparation
 
-Dane zostały przetworzone w skrypcie `clean_tweets.py`. Główne operacje:
+The data was processed in the `clean_tweets.py` script. Main operations:
 
-* konwersja tekstu do małych liter,
-* usunięcie adresów URL i znaków interpunkcyjnych,
-* tokenizacja i usuwanie słów pustych (ang. stopwords) z użyciem `nltk`.
+- converting text to lowercase,
+- removing URLs and punctuation marks,
+- tokenization and removing stopwords using `nltk`.
 
-Oczyszczone teksty zapisano w kolumnie `cleaned_text`, a cały zbiór do pliku `tweets_cleaned.json`.
+Cleaned texts were saved in the `cleaned_text` column, and the entire dataset to the `tweets_cleaned.json` file.
 
-## 4. Analiza wydźwięku
+## 4. Sentiment Analysis
 
-Analiza nastroju została przeprowadzona w `analyze_sentiment.py` przy użyciu modelu VADER. Dla każdego tweeta obliczono współczynnik `compound`, na podstawie którego przypisano klasę nastroju:
+The sentiment analysis was performed in `analyze_sentiment.py` using the VADER model. For each tweet, a `compound` coefficient was calculated, based on which a sentiment class was assigned:
 
-* `positive`: compound ≥ 0.05
-* `negative`: compound ≤ -0.05
-* `neutral`: pozostałe
+- `positive`: compound ≥ 0.05
+- `negative`: compound ≤ -0.05
+- `neutral`: others
 
-Wyniki zapisano w kolumnach `sentiment` i `sentiment_label`.
+The results were saved in the `sentiment` and `sentiment_label` columns.
 
-## 5. Wizualizacje
+## 5. Visualizations
 
-W celu lepszego zrozumienia wyników przygotowano cztery wykresy:
+To better understand the results, four charts were prepared:
 
-### Chmura słów
+### Word Cloud
 
-Wizualizacja najczęściej występujących słów po oczyszczeniu tweetów.
+Visualization of the most frequently occurring words after cleaning tweets.
 
-![Chmura słów](images/word_cloud.png)
+![Word Cloud](images/word_cloud.png)
 
-### Rozkład klas nastrojów (Wykres słupkowy)
+### Sentiment Class Distribution (Bar Chart)
 
-Pokazuje, jaka część tweetów miała charakter pozytywny, neutralny lub negatywny.
+Shows what portion of tweets were positive, neutral, or negative.
 
-![Wykres słupkowy](images/plot.png)
+![Bar Chart](images/plot.png)
 
-### Zmiana nastroju w czasie (Wykres liniowy)
+### Sentiment Change Over Time (Line Chart)
 
-Pokazuje średni poziom nastroju w czasie, z uwzględnieniem okien czasowych.
+Shows the average sentiment level over time, taking into account time windows.
 
-![Wykres liniowy](images/plot2.png)
+![Line Chart](images/plot2.png)
 
-### Nastrój a długość tweeta (Heatmapa)
+### Sentiment vs. Tweet Length (Heatmap)
 
-Analizuje zależność między liczbą słów w tweecie a jego średnim nastrojem.
+Analyzes the relationship between the number of words in a tweet and its average sentiment.
 
-![Heatmapa](images/heatmap.png)
+![Heatmap](images/heatmap.png)
 
-## 6. Wnioski
+## 6. Conclusions
 
-Analiza wykazała przewagę pozytywnego nastroju w tweetach dotyczących transferów Realu Madryt. Najczęściej pojawiały się nazwiska zawodników i słowa związane z transferami. Dłuższe tweety zwykle miały bardziej pozytywny charakter, co sugeruje, że użytkownicy dzielący się bardziej rozbudowanymi opiniami wyrażali większy entuzjazm.
+The analysis showed a predominance of positive sentiment in tweets about Real Madrid transfers. Player names and words related to transfers appeared most frequently. Longer tweets usually had a more positive character, which suggests that users sharing more elaborate opinions expressed greater enthusiasm.

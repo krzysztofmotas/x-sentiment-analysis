@@ -13,14 +13,14 @@ with open("tweets_cleaned.json", encoding="utf-8") as f:
 
 df["created_at"] = pd.to_datetime(df["created_at"])
 
-# Inicjalizacja VADER
+# Initialize VADER
 sia = SentimentIntensityAnalyzer()
 
-# Oblicza ogólny wynik nastroju dla podanego tekstu
+# Calculate overall sentiment score for the given text
 def get_vader_sentiment(text):
     return sia.polarity_scores(text)["compound"]
 
-# Klasyfikuje wynik nastroju jako pozytywny, neutralny lub negatywny
+# Classify sentiment score as positive, neutral or negative
 def classify_sentiment(score):
     if score >= 0.05:
         return "positive"
@@ -32,46 +32,46 @@ def classify_sentiment(score):
 df["sentiment"] = df["cleaned_text"].apply(get_vader_sentiment)
 df["sentiment_label"] = df["sentiment"].apply(classify_sentiment)
 
-# Chmura słów
+# Word cloud
 text = " ".join(df["cleaned_text"])
 wordcloud = WordCloud(width=800, height=400, background_color="white", colormap="Blues").generate(text)
 
 plt.figure(figsize=(10, 5))
 plt.imshow(wordcloud, interpolation="bilinear")
 plt.axis("off")
-plt.title("Chmura słów – Transfery Realu Madryt")
+plt.title("Word Cloud - Real Madrid Transfers")
 plt.tight_layout()
 plt.show()
 
-# Wykres słupkowy – rozkład nastrojów
+# Bar chart – sentiment distribution
 plt.figure(figsize=(6, 4))
 sns.countplot(data=df, x="sentiment_label", hue="sentiment_label", palette="coolwarm", legend=False)
-plt.title("Rozkład nastrojów w tweetach")
-plt.xlabel("Nastrój")
-plt.ylabel("Liczba tweetów")
+plt.title("Sentiment Distribution in Tweets")
+plt.xlabel("Sentiment")
+plt.ylabel("Number of Tweets")
 plt.tight_layout()
 plt.show()
 
-# Wykres liniowy – nastrój w czasie
+# Line chart – sentiment over time
 df_sorted = df.sort_values("created_at")
 df_sorted["avg_sentiment"] = df_sorted["sentiment"].rolling(window=3, min_periods=1).mean()
 
 plt.figure(figsize=(10, 5))
 plt.plot(df_sorted["created_at"], df_sorted["avg_sentiment"], marker="o")
-plt.title("Zmiana nastroju w czasie")
-plt.xlabel("Czas")
-plt.ylabel("Średni nastrój")
+plt.title("Sentiment Change Over Time")
+plt.xlabel("Time")
+plt.ylabel("Average Sentiment")
 plt.xticks(rotation=45)
 plt.tight_layout()
 plt.show()
 
-# Heat mapa - średni nastrój vs. długość tweeta
+# Heat map - average sentiment vs. tweet length
 df["word_count"] = df["cleaned_text"].apply(lambda x: len(x.split()))
 
 df["word_count_range"] = pd.cut(
     df["word_count"],
     bins=[0, 5, 10, 20, 40],
-    labels=["0–5 słów", "6–10 słów", "11–20 słów", "21–40 słów"]
+    labels=["0-5 words", "6-10 words", "11-20 words", "21-40 words"]
 )
 
 avg_sentiment_by_length = df.pivot_table(
@@ -82,8 +82,8 @@ avg_sentiment_by_length = df.pivot_table(
 )
 
 sns.heatmap(avg_sentiment_by_length, annot=True, cmap="YlGnBu", center=0)
-plt.title("Średni nastrój względem długości tweeta")
-plt.ylabel("Zakres liczby słów")
-plt.xlabel("Nastrój")
+plt.title("Average Sentiment by Tweet Length")
+plt.ylabel("Word Count Range")
+plt.xlabel("Sentiment")
 plt.tight_layout()
 plt.show()

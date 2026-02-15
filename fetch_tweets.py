@@ -1,9 +1,8 @@
-# Wykorzystany przykład: https://github.com/xdevplatform/Twitter-API-v2-sample-code/blob/main/Recent-Search/recent_search.py
+# Example used: https://github.com/xdevplatform/Twitter-API-v2-sample-code/blob/main/Recent-Search/recent_search.py
 
 import requests
 import json
 import os
-from datetime import datetime
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -11,7 +10,7 @@ BEARER_TOKEN = os.getenv("BEARER_TOKEN")
 
 search_url = "https://api.twitter.com/2/tweets/search/recent"
 
-# Opcjonalne parametry: start_time,end_time,since_id,until_id,max_results,next_token,
+# Optional parameters: start_time,end_time,since_id,until_id,max_results,next_token,
 # expansions,tweet.fields,media.fields,poll.fields,place.fields,user.fields
 query_params = {
     'query': (
@@ -24,17 +23,17 @@ query_params = {
     'tweet.fields': 'created_at,text,lang,author_id'
 }
 
-# Dodaje nagłówki autoryzacyjne (Bearer Token i User-Agent) do żądania HTTP
+# Adds authorization headers (Bearer Token and User-Agent) to the HTTP request
 def bearer_oauth(r):
     r.headers["Authorization"] = f"Bearer {BEARER_TOKEN}"
     r.headers["User-Agent"] = "x-sentiment-analysis"
     return r
 
-# Łączy się z endpointem API X i zwraca odpowiedź w formacie JSON
+# Connects to the X API endpoint and returns the response in JSON format
 def connect_to_endpoint(url, params):
     response = requests.get(url, auth=bearer_oauth, params=params)
     if response.status_code != 200:
-        raise Exception(f"Błąd: {response.status_code} {response.text}")
+        raise Exception(f"Error: {response.status_code} {response.text}")
     return response.json()
 
 def main():
@@ -46,7 +45,7 @@ def main():
     with open(filename, "w", encoding="utf-8") as f:
         json.dump(json_response, f, ensure_ascii=False, indent=4)
 
-    print(f"Dane zapisane do pliku: {filename}")
+    print(f"Data saved to file: {filename}")
 
 if __name__ == "__main__":
     main()
